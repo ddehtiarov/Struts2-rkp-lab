@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <constant name="struts.devMode" value="true"/>
+
+    <package name="default" namespace="/" extends="struts-default">
+        <interceptors>
+            <interceptor-stack name="appDefault">
+                <interceptor-ref name="paramsPrepareParamsStack">
+                    <param name="exception.logEnabled">true</param>
+                    <param name="exception.logLevel">ERROR</param>
+                    <param name="params.excludeParams">
+                        dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,parameters\...*,submit
+                    </param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="appDefault"/>
+
+        <default-action-ref name="login"/>
+
+        <action name="index" class="org.dehtiarov.rkp.action.UserAction" method="list">
+            <result name="success">/WEB-INF/jsp/users.jsp</result>
+            <result name="login" type="redirectAction">login</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="*User" class="org.dehtiarov.rkp.action.UserAction" method="{1}">
+            <result name="success" type="redirectAction">index</result>
+            <result name="input">/WEB-INF/jsp/userForm.jsp</result>
+        </action>
+        <action name="login" class="org.dehtiarov.rkp.action.UserAction" method="start">
+            <result name="success" type="redirectAction">index</result>
+            <result name="login">/WEB-INF/jsp/login.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="register" class="org.dehtiarov.rkp.action.UserAction" method="register">
+            <result name="success" type="redirectAction">index</result>
+            <result name="input">/WEB-INF/jsp/register.jsp</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+        <action name="goaway" class="org.dehtiarov.rkp.action.UserAction" method="goaway">
+            <result name="login" type="redirectAction">login</result>
+            <interceptor-ref name="basicStack"/>
+        </action>
+    </package>
+</struts>
